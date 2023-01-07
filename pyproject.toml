@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pixelfed_python_api"
+version = "0.0.1"
+authors = [
+  { name="Denis Cappellin", email="basset08.velars@icloud.com" },
+]
+description = "Python Library for Pixelfed"
+keywords = ['pixelfed', 'python', 'api']
+readme = "README.rst"
+license = {'text'= 'AGPL-3.0 license'}
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    'requests',
+]
+
+
+
+[project.urls]
+"Homepage" = "https://github.com/dcappellin/pixelfed-python-api"

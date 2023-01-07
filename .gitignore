@@ -1,0 +1,6 @@
+prod.env
+/.idea/
+/dist/
+/src/pixelfed_python_api.egg-info/
+/.pytest_cache/
+__pycache__
