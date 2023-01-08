@@ -15,10 +15,12 @@ class Pixelfed:
 
     @staticmethod
     def _get(func):
-        def inner(self):
-            func(self)
+        def inner(self, *args, **kwargs):
+            func(self, *args, **kwargs)
             self.client.method = 'GET'
-            return requests.Session().send(self.client).json()
+            resp = requests.Session().send(self.client)
+            resp.raise_for_status()
+            return resp.json()
         return inner
 
     @staticmethod
@@ -26,26 +28,37 @@ class Pixelfed:
         def inner(self, *args, **kwargs):
             func(self, *args, **kwargs)
             self.client.method = 'POST'
-            return requests.Session().send(self.client).json()
+            resp = requests.Session().send(self.client)
+            resp.raise_for_status()
+            return resp.json()
         return inner
 
-    @_get
-    def instance(self):
-        self.client.url += 'api/v1/instance'
-        print(self.client)
-
     @_post
-    def media(self, image_filename):
-        self.client.url.append('api/v1/media')
-        files = [('file', (image_filename, open(image_filename, 'rb'), 'image/jpg'))]
-        self.client.prepare_body(data=None, files=files)
-
-    @_post
-    def statuses(self, status, media_ids=None, visibility='unlisted'):
-        self.client.url.append('api/v1/statuses')
+    def _status_post(self, status, media_ids=None, visibility='unlisted'):
         data = {
             'media_ids': media_ids,
             'status': status,
             'visibility': visibility
         }
         self.client.prepare_body(data=None, files=None, json=data)
+
+    @_get
+    def _status(self, status_id):
+        self.client.url += f'/{status_id}'
+
+    @_get
+    def instance(self):
+        self.client.url += 'api/v1/instance'
+
+    @_post
+    def media(self, image_filename):
+        self.client.url += 'api/v1/media'
+        files = [('file', (image_filename, open(image_filename, 'rb'), 'image/jpg'))]
+        self.client.prepare_body(data=None, files=files)
+
+    def statuses(self, status_id=None, status=None, media_ids=None, visibility='unlisted'):
+        self.client.url += 'api/v1/statuses'
+        if status_id is not None:
+            return self._status(status_id)
+        else:
+            return self._status_post(status, media_ids, visibility)
