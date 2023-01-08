@@ -38,3 +38,12 @@ class TestPixelfed:
         os.environ.pop('PIXELFED_API_TOKEN')
         with pytest.raises(KeyError):
             pfi = Pixelfed().instance()
+
+    def test_get_status(self):
+        status_id = '508736992114141332'
+        load_dotenv('prod.env')
+        pfi = Pixelfed().statuses(status_id=status_id)
+        assert pfi['id'] == status_id
+        assert pfi is not None
+        with pytest.raises(KeyError):
+            pfi['error']
