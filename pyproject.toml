@@ -21,7 +21,5 @@ dependencies = [
     'requests',
 ]
 
-
-
 [project.urls]
 "Homepage" = "https://github.com/dcappellin/pixelfed-python-api"
